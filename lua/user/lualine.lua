@@ -57,9 +57,9 @@ function M.config()
       lualine_a = { "mode" },
       lualine_b = { "branch" },
       lualine_c = { diagnostics },
-      lualine_x = { diff, spaces, "encoding", filetype },
+      lualine_x = { diff, spaces, filetype },
       lualine_y = { location },
-      lualine_z = { "progress" },
+      lualine_z = { },
     },
   }
 end

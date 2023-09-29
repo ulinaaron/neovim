@@ -15,8 +15,11 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " " -- make sure to set `mapleader` before lazy so your mappings are correct
 
 -- load lazy
-require("lazy").setup("user", {
-  install = { colorscheme = { require("user.theme_nightfox").name } },
+require("lazy").setup({
+    
+  { import = "user" }
+  }, {
+  install = { colorscheme = { require("user.theme_tokyonight").name } },
   defaults = { lazy = true, version = "57cce98dfdb2f2dd05a0567d89811e6d0505e13b" },
   ui = { wrap = "true" },
   change_detection = { enabled = true },
@@ -28,7 +31,7 @@ require("lazy").setup("user", {
         "matchit", -- What is it?
          "matchparen", -- Plugin for showing matching parens
          "netrwPlugin", -- Handles file transfers and remote directory listing across a network
-         "tarPlugin", -- Plugin for browsing tar files
+       "tarPlugin", -- Plugin for browsing tar files
          "tohtml", -- Converting a syntax highlighted file to HTML
          "tutor", -- Teaching?
         "zipPlugin", -- Handles browsing zipfiles

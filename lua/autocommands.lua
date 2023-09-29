@@ -1,4 +1,4 @@
-vim.cmd("colorscheme duskfox")
+vim.cmd("colorscheme tokyonight")
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "qf", "help", "man", "lspinfo", "spectre_panel" },

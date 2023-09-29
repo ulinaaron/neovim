@@ -1,7 +1,38 @@
 local M = {
-  "akinsho/toggleterm.nvim",
+"akinsho/toggleterm.nvim",
   commit = "19aad0f41f47affbba1274f05e3c067e6d718e1e",
   event = "VeryLazy",
+commander = {
+    {
+      cmd = "<C-\\>",
+      desc = "Toggle Terminal"
+    },
+      {
+        cmd = "<C-\\>",
+        keys = {"t", "<ESC>"},
+        desc = "Leave terminal mode"
+      },
+      {
+        cmd = "<C-\\><C-n><C-W>h",
+        keys = {"t", "<C-h>"},
+        desc = "Navigate to left window from terminal"
+      },
+      {
+        cmd = "<C-\\><C-n><C-W>j",
+        keys = {"t", "<C-j>"},
+        desc = "Navigate to below window from terminal"
+      },
+      {
+        cmd = "<C-\\><C-n><C-W>k",
+        keys = {"t", "<C-k>"},
+        desc = "Navigate to above window from terminal"
+      },
+      {
+        cmd = "<C-\\><C-n><C-W>l",
+        keys = {"t", "<C-l>"},
+        desc = "Navigate to right window from terminal"
+      },
+    }
 }
 
 function M.config()
@@ -28,12 +59,12 @@ function M.config()
   }
 
   function _G.set_terminal_keymaps()
-    local opts = { noremap = true }
+    -- local opts = { noremap = true }
     -- vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<C-\><C-n><C-W>j]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<C-k>", [[<C-\><C-n><C-W>k]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<C-l>", [[<C-\><C-n><C-W>l]], opts)
+    -- vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], opts)
+    -- vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<C-\><C-n><C-W>j]], opts)
+    -- vim.api.nvim_buf_set_keymap(0, "t", "<C-k>", [[<C-\><C-n><C-W>k]], opts)
+    -- vim.api.nvim_buf_set_keymap(0, "t", "<C-l>", [[<C-\><C-n><C-W>l]], opts)
   end
 
   vim.cmd "autocmd! TermOpen term://* lua set_terminal_keymaps()"

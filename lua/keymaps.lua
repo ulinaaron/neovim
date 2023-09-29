@@ -11,6 +11,14 @@ return {
   }
 end
 
+-- Modes
+--   normal_mode = "n",
+--   insert_mode = "i",
+--   visual_mode = "v",
+--   visual_block_mode = "x",
+--   term_mode = "t",
+--   command_mode = "c",
+
 --Remap space as leader key
 keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
@@ -19,13 +27,19 @@ vim.g.mapleader = " "
 commander.add({
   {
     cmd = "<CMD>Telescope commander<CR>",
-    keys = {"n", "<C-S-P>", opts},
+    keys = {{"n", "i", "v"}, "<C-S-P>", opts},
     show = false
+  },
+  {
+    desc = "Recent Files",
+    cmd = ":Telescope oldfiles <CR>",
+    keys = {{"n", "i", "v",}, "<leader>r", map_opts("Recent Files")},
+    cat = "General"
   },
   {
     desc = "Projects",
     cmd = ":lua require('telescope').extensions.projects.projects()<CR>",
-    keys = {{"n", "i", "v",}, "<leader>p", opts},
+    keys = {{"n", "i", "v",}, "<leader>p", map_opts("Projects")},
     cat = "General"
   },
   {
@@ -36,20 +50,11 @@ commander.add({
   },
 })
 
-
--- Modes
---   normal_mode = "n",
---   insert_mode = "i",
---   visual_mode = "v",
---   visual_block_mode = "x",
---   term_mode = "t",
---   command_mode = "c",
-
 -- Normal --
 
 commander.add({
  {
-    desc = "Navigate Window - Left",
+  desc = "Navigate Window - Left",
     cmd = "<C-w>h",
     keys = {"n", "<C-h>"},
   },
@@ -71,12 +76,12 @@ commander.add({
   {
     desc = "Navigate buffers - Next",
     cmd = ":bnext<CR>",
-    keys = {"n", "<S-l>","<S-Left>"},
+    keys = {"n", "<S-Left>"},
   },
   {
     desc = "Navigate buffers - Previous",
     cmd = ":bprevious<CR>",
-    keys = {"n", "<S-h>","<S-Right>"},
+    keys = {"n", "<S-Right>"},
   },
 {
     desc = "Clear highlights",
@@ -95,35 +100,11 @@ commander.add({
     cat = "General"
   },
   {
-    desc = "Better paste",
+    desc = "Paste",
     cmd = "P",
     keys = {"v", "p"},
   },
 })
---
--- -- Better window navigation
--- keymap("n", "<C-h>", "<C-w>h", opts)
--- keymap("n", "<C-j>", "<C-w>j", opts)
--- keymap("n", "<C-k>", "<C-w>k", opts)
--- keymap("n", "<C-l>", "<C-w>l", opts)
---
--- -- Navigate buffers
--- keymap("n", "<S-l>", ":bnext<CR>", opts)
--- keymap("n", "<S-Left>", ":bnext<CR>", opts)
--- keymap("n", "<S-h>", ":bprevious<CR>", opts)
--- keymap("n", "<S-Right>", ":bprevious<CR>", opts)
---
--- -- Clear highlights
--- keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
---
--- -- Close buffers
--- keymap("n", "<S-q>", "<cmd>Bdelete!<CR>", opts)
---
--- -- Quit
--- keymap("n", "<C-q>", ":qa!<CR>", opts)
---
--- -- Better paste
--- keymap("v", "p", "P", opts)
 
 -- Insert --
 -- Press jk fast to enter
@@ -146,17 +127,46 @@ keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
 -- keymap("n", "<leader>g", )
 -- keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", map_opts("Git Client"))
 
-local mapping = {
-    {"n", "<leader>gs", ":!git status<cr>", {silent = true, noremap = true, nowait = true, desc = "Status"}},
-    {"n", "<leader>ga", ":!git add .<cr>", {silent = true, noremap = true, nowait = true, desc = "Add All"}},
-    {"n", "<leader>gc", ":!git commit<cr>", {silent = true, noremap = true, nowait = true, desc = "Commit"}},
-    {"n", "<leader>gp", ":!git push<cr>", {silent = true, noremap = true, nowait = true, desc = "Push"}},
-    {"n", "<leader>gf", ":!git fetch<cr>", {silent = true, noremap = true, nowait = true, desc = "Fetch"}}
-}
+commander.add({
+ {
+        desc = "Status",
+        cmd = ":!git status<cr>",
+        keys = {"n", "<leader>gs"},
+        cat = "Git"
+    },
+    {
+        desc = "Add All",
+        cmd = ":!git add .<cr>",
+        keys = {"n", "<leader>ga"},
+        cat = "Git"
+    },
+    {
+        desc = "Commit",
+        cmd = ":!git commit<cr>",
+        keys = {"n", "<leader>gc"},
+        cat = "Git"
+    },
+    {
+        desc = "Push",
+        cmd = ":!git push<cr>",
+        keys = {"n", "<leader>gp"},
+        cat = "Git"
+    },
+    {
+        desc = "Fetch",
+        cmd = ":!git fetch<cr>",
+        keys = {"n", "<leader>gf"},
+        cat = "Git"
+    },
+{
+        desc = "LazyGit Client",
+      cmd = "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
+        keys = {"n", "<leader>gf"},
+        cat = "Git"
+    }
 
-for _, map in ipairs(mapping) do
-    vim.keymap.set(map[1], map[2], map[3], map[4])
-end
+})
+
 
 -- Register the descriptions for which-key
 require("which-key").register({
@@ -178,12 +188,6 @@ vim.keymap.set("n", "<C-c>", '"+y')
 
 -- Copy in visual mode and maintain position
 vim.keymap.set("v", "<C-c>", [["+y`']], { noremap = true, silent = true })
-
--- Copy current line
-vim.keymap.set("n", "<C-Shift-c>", '"+yy')
-
--- Copy and paste current line
-vim.keymap.set("n", "<C-c>", ':let @+=expand("%")<CR>o<C-r>+<Esc>', { expr = true })
 
 -- Paste
 vim.keymap.set("n", "<C-v>", '"+p')
@@ -223,9 +227,6 @@ vim.keymap.set("n", "<C-Shift-z>", "<C-r>")
 
 -- Select current line
 vim.keymap.set("n", "x", "V", { noremap = true })
-
--- Quit
-vim.keymap.set("n", "<C-q>", ":qa!<CR>", { noremap = true })
 
 -- Toggle Comments
 vim.keymap.set("n", "<C-/>", "gcc", { noremap = true })
@@ -271,20 +272,34 @@ vim.keymap.set("v", "<S-Down>", "<Esc>5j", { noremap = true, silent = true })
 -- vim.keymap.set("v", "<A-S-Up>", ":<C-u>move-2<CR>gv=gv", { noremap = true, silent = true })
 
 -- Indenting
-vim.keymap.set("n", "<C-]>", ">>")
-vim.keymap.set("v", "<C-]>", ">gv")
-
-vim.keymap.set("n", "<C-[>", "<<")
-vim.keymap.set("v", "<C-[>", "<gv")
+commander.add({
+  {
+    desc = "Indent line or selection",
+    cmd = ">>",
+    keys = {"n", "<C-]>"},
+    cat = "Indenting"
+  },
+  {
+    desc = "Indent visual selection and reselect",
+    cmd = ">gv",
+    keys = {"v", "<C-]>"},
+    cat = "Indenting"
+  },
+  {
+    desc = "Dedent line or selection",
+    cmd = "<<",
+    keys = {"n", "<C-[>"},
+    cat = "Indenting"
+  },
+  {
+    desc = "Dedent visual selection and reselect",
+    cmd = "<gv",
+    keys = {"v", "<C-[>"},
+    cat = "Indenting"
+  },
+})
 
 -- Buffers
 vim.keymap.set("n", "<A-,>", "<C-^>", { noremap = true })
 vim.keymap.set("n", "<A-.>", "<C-6>", { noremap = true })
 vim.keymap.set("n", "<A-w>", ":bdelete<CR>", { noremap = true })
-
-
--- Search and replace
-vim.keymap.set("n", "<C-f>", "<leader>sb")
-vim.keymap.set("n", "<C-Shift-f>", ":%s//g<Left><Left>") -- Function to check if Neotree is open
-
-vim.keymap.set("v", "<ESC>", ":<C-u>nohlsearch<CR>", { noremap = true, silent = true })
