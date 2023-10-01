@@ -16,10 +16,36 @@ vim.g.mapleader = " " -- make sure to set `mapleader` before lazy so your mappin
 
 -- load lazy
 require("lazy").setup({
-    
+ -- Git related plugins
+  'tpope/vim-fugitive',
+  'tpope/vim-rhubarb',
+
+  -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth',
+  {
+    "mg979/vim-visual-multi",
+    event = "VeryLazy",
+    commit = "724bd53adfbaf32e129b001658b45d4c5c29ca1a"
+  },
+  {
+  '00sapo/visual.nvim',
+  config = function()
+    require('visual').setup({
+    commands = {
+      move_up_then_normal = { amend = true },
+      move_down_then_normal = { amend = true },
+      move_right_then_normal = { amend = true },
+      move_left_then_normal = { amend = true },
+    },
+  } )
+  end,
+  opts = { treesitter_textobjects = true },
+dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-treesitter/nvim-treesitter-textobjects" },
+  event = "VeryLazy"
+},
   { import = "user" }
   }, {
-  install = { colorscheme = { require("user.theme_tokyonight").name } },
+  install = { colorscheme = { require("user.theme_nightfox").name } },
   defaults = { lazy = true, version = "57cce98dfdb2f2dd05a0567d89811e6d0505e13b" },
   ui = { wrap = "true" },
   change_detection = { enabled = true },
@@ -39,3 +65,4 @@ require("lazy").setup({
     },
   },
 })
+

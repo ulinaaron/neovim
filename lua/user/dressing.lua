@@ -1,7 +1,8 @@
 local M = {
   'stevearc/dressing.nvim',
   opts = {},
-  lazy = true
+  lazy = true,
+  event = "VeryLazy"
 }
 
 return M

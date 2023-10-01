@@ -5,7 +5,7 @@ local opts = { silent = true }
 local commander = require("commander")
 
 function map_opts(desc)
-return {
+  return {
     silent = true,
     desc = desc
   }
@@ -27,84 +27,84 @@ vim.g.mapleader = " "
 commander.add({
   {
     cmd = "<CMD>Telescope commander<CR>",
-    keys = {{"n", "i", "v"}, "<C-S-P>", opts},
+    keys = { { "n", "i", "v" }, "<C-S-P>", opts },
     show = false
   },
   {
     desc = "Recent Files",
     cmd = ":Telescope oldfiles <CR>",
-    keys = {{"n", "i", "v",}, "<leader>r", map_opts("Recent Files")},
+    keys = { { "n", "i", "v", }, "<leader>r", map_opts("Recent Files") },
     cat = "General"
   },
   {
     desc = "Projects",
     cmd = ":lua require('telescope').extensions.projects.projects()<CR>",
-    keys = {{"n", "i", "v",}, "<leader>p", map_opts("Projects")},
+    keys = { { "n", "i", "v", }, "<leader>p", map_opts("Projects") },
     cat = "General"
   },
   {
     desc = "File Explorer",
     cmd = ":NvimTreeToggle<CR>",
-    keys = {{"n", "i", "v",}, "<leader>e", map_opts("File Explorer")},
+    keys = { { "n", "i", "v", }, "<leader>e", map_opts("File Explorer") },
     cat = "General"
   },
-})
+}, {})
 
 -- Normal --
 
 commander.add({
- {
-  desc = "Navigate Window - Left",
+  {
+    desc = "Navigate Window - Left",
     cmd = "<C-w>h",
-    keys = {"n", "<C-h>"},
+    keys = { "n", "<C-h>" },
   },
   {
     desc = "Navigate Window - down",
     cmd = "<C-w>j",
-    keys = {"n", "<C-j>"},
+    keys = { "n", "<C-j>" },
   },
   {
     desc = "Navigate Window - up",
     cmd = "<C-w>k",
-    keys = {"n", "<C-k>"},
+    keys = { "n", "<c-k>" },
   },
   {
-    desc = "Navigate Window - right",
-    cmd = "<C-w>l",
-    keys = {"n", "<C-l>"},
+    desc = "navigate window - right",
+    cmd = "<c-w>l",
+    keys = { "n", "<c-l>" },
   },
   {
-    desc = "Navigate buffers - Next",
-    cmd = ":bnext<CR>",
-    keys = {"n", "<S-Left>"},
+    desc = "navigate buffers - next",
+    cmd = ":bnext<cr>",
+    keys = { "n", "<s-left>" },
   },
   {
     desc = "Navigate buffers - Previous",
     cmd = ":bprevious<CR>",
-    keys = {"n", "<S-Right>"},
+    keys = { "n", "<S-Right>" },
   },
-{
+  {
     desc = "Clear highlights",
     cmd = "<cmd>nohlsearch<CR>",
-    keys = {"n", "<leader>h"},
+    keys = { "n", "<leader>h" },
   },
   {
     desc = "Close buffers",
     cmd = "<cmd>Bdelete!<CR>",
-    keys = {"n", "<S-q>"},
+    keys = { "n", "<S-q>" },
   },
   {
     desc = "Quit",
     cmd = ":qa!<CR>",
-    keys = {"n", "<C-q>"},
+    keys = { "n", "<C-q>" },
     cat = "General"
   },
   {
     desc = "Paste",
     cmd = "P",
-    keys = {"v", "p"},
+    keys = { "v", "p" },
   },
-})
+}, {})
 
 -- Insert --
 -- Press jk fast to enter
@@ -128,57 +128,57 @@ keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
 -- keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", map_opts("Git Client"))
 
 commander.add({
- {
-        desc = "Status",
-        cmd = ":!git status<cr>",
-        keys = {"n", "<leader>gs"},
-        cat = "Git"
-    },
-    {
-        desc = "Add All",
-        cmd = ":!git add .<cr>",
-        keys = {"n", "<leader>ga"},
-        cat = "Git"
-    },
-    {
-        desc = "Commit",
-        cmd = ":!git commit<cr>",
-        keys = {"n", "<leader>gc"},
-        cat = "Git"
-    },
-    {
-        desc = "Push",
-        cmd = ":!git push<cr>",
-        keys = {"n", "<leader>gp"},
-        cat = "Git"
-    },
-    {
-        desc = "Fetch",
-        cmd = ":!git fetch<cr>",
-        keys = {"n", "<leader>gf"},
-        cat = "Git"
-    },
-{
-        desc = "LazyGit Client",
-      cmd = "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
-        keys = {"n", "<leader>gf"},
-        cat = "Git"
-    }
+  {
+    desc = "Status",
+    cmd = ":!git status<cr>",
+    keys = { "n", "<leader>gs" },
+    cat = "Git"
+  },
+  {
+    desc = "Add All",
+    cmd = ":!git add .<cr>",
+    keys = { "n", "<leader>ga" },
+    cat = "Git"
+  },
+  {
+    desc = "Commit",
+    cmd = ":!git commit<cr>",
+    keys = { "n", "<leader>gc" },
+    cat = "Git"
+  },
+  {
+    desc = "Push",
+    cmd = ":!git push<cr>",
+    keys = { "n", "<leader>gp" },
+    cat = "Git"
+  },
+  {
+    desc = "Fetch",
+    cmd = ":!git fetch<cr>",
+    keys = { "n", "<leader>gf" },
+    cat = "Git"
+  },
+  {
+    desc = "LazyGit Client",
+    cmd = "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
+    keys = { "n", "<leader>gf" },
+    cat = "Git"
+  }
 
-})
+}, {})
 
 
 -- Register the descriptions for which-key
 require("which-key").register({
-    g = {
-        name = "+git",
-        s = 'Status',
-        a = 'Add All',
-        c = 'Commit',
-        p = 'Push',
-        f = 'Fetch',
-      }
-}, {prefix = "<leader>"})
+  g = {
+    name = "+git",
+    s = 'Status',
+    a = 'Add All',
+    c = 'Commit',
+    p = 'Push',
+    f = 'Fetch',
+  }
+}, { prefix = "<leader>" })
 
 -- Lsp
 keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
@@ -276,25 +276,25 @@ commander.add({
   {
     desc = "Indent line or selection",
     cmd = ">>",
-    keys = {"n", "<C-]>"},
+    keys = { "n", "<C-]>" },
     cat = "Indenting"
   },
   {
     desc = "Indent visual selection and reselect",
     cmd = ">gv",
-    keys = {"v", "<C-]>"},
+    keys = { "v", "<C-]>" },
     cat = "Indenting"
   },
   {
     desc = "Dedent line or selection",
     cmd = "<<",
-    keys = {"n", "<C-[>"},
+    keys = { "n", "<C-[>" },
     cat = "Indenting"
   },
   {
     desc = "Dedent visual selection and reselect",
     cmd = "<gv",
-    keys = {"v", "<C-[>"},
+    keys = { "v", "<C-[>" },
     cat = "Indenting"
   },
 })
@@ -303,3 +303,10 @@ commander.add({
 vim.keymap.set("n", "<A-,>", "<C-^>", { noremap = true })
 vim.keymap.set("n", "<A-.>", "<C-6>", { noremap = true })
 vim.keymap.set("n", "<A-w>", ":bdelete<CR>", { noremap = true })
+
+-- Util
+vim.api.nvim_set_keymap('n', '<esc>', '<esc>', { noremap = true })
+-- For Visual mode
+vim.api.nvim_set_keymap('v', '<esc>', '<esc>', { noremap = true })
+-- For Select mode
+vim.api.nvim_set_keymap('s', '<esc>', '<esc>', { noremap = true })
