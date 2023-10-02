@@ -33,19 +33,19 @@ commander.add({
   {
     desc = "Recent Files",
     cmd = ":Telescope oldfiles <CR>",
-    keys = { { "n", "i", "v", }, "<leader>r", map_opts("Recent Files") },
+    keys = { "n", "<leader>r", map_opts("Recent Files") },
     cat = "General"
   },
   {
     desc = "Projects",
     cmd = ":lua require('telescope').extensions.projects.projects()<CR>",
-    keys = { { "n", "i", "v", }, "<leader>p", map_opts("Projects") },
+    keys = { "n", "<leader>p", map_opts("Projects") },
     cat = "General"
   },
   {
     desc = "File Explorer",
     cmd = ":NvimTreeToggle<CR>",
-    keys = { { "n", "i", "v", }, "<leader>e", map_opts("File Explorer") },
+    keys = { "n", "<leader>e", map_opts("File Explorer") },
     cat = "General"
   },
 }, {})
@@ -84,11 +84,6 @@ commander.add({
     keys = { "n", "<S-Right>" },
   },
   {
-    desc = "Clear highlights",
-    cmd = "<cmd>nohlsearch<CR>",
-    keys = { "n", "<leader>h" },
-  },
-  {
     desc = "Close buffers",
     cmd = "<cmd>Bdelete!<CR>",
     keys = { "n", "<S-q>" },
@@ -118,10 +113,38 @@ keymap("v", ">", ">gv", opts)
 -- Plugins --
 
 -- Telescope
-keymap("n", "<leader>ff", ":Telescope find_files<CR>", opts)
-keymap("n", "<leader>ft", ":Telescope live_grep<CR>", opts)
-keymap("n", "<leader>fp", ":Telescope projects<CR>", opts)
-keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
+commander.add({
+  {
+    desc = "Find Files",
+    cmd = ":Telescope find_files<CR>",
+    keys = { "n", "<leader>ff", map_opts("Find Files") },
+    cat = "Find"
+  },
+  {
+    desc = "Find Keyword Globally",
+    cmd = ":Telescope live_grep<CR>",
+    keys = { "n", "<leader>ft", map_opts("Find Keyword Globally") },
+    cat = "Find"
+  },
+  {
+    desc = "Projects",
+    cmd = ":Telescope projects<CR>",
+    keys = { "n", "<leader>fp", map_opts("Find Projects") },
+    cat = "Find"
+  },
+  {
+    desc = "Buffers",
+    cmd = ":Telescope buffers<CR>",
+    keys = { "n", "<leader>fb", map_opts("Find Buffers") },
+    cat = "Find"
+  },
+  {
+    cmd = ":Telescope find_files<CR>", -- Replace this with the default action you want for "<leader>f"
+    keys = { "n", "<leader>f", map_opts("+ Find") },
+    cat = "Find",
+    show = false
+  }
+}, {})
 
 -- Git
 -- keymap("n", "<leader>g", )
@@ -131,54 +154,46 @@ commander.add({
   {
     desc = "Status",
     cmd = ":!git status<cr>",
-    keys = { "n", "<leader>gs" },
+    keys = { "n", "<leader>gs", map_opts("Status") },
     cat = "Git"
   },
   {
     desc = "Add All",
     cmd = ":!git add .<cr>",
-    keys = { "n", "<leader>ga" },
+    keys = { "n", "<leader>ga", map_opts("Add All") },
     cat = "Git"
   },
   {
     desc = "Commit",
     cmd = ":!git commit<cr>",
-    keys = { "n", "<leader>gc" },
+    keys = { "n", "<leader>gc", map_opts("Commit") },
     cat = "Git"
   },
   {
     desc = "Push",
     cmd = ":!git push<cr>",
-    keys = { "n", "<leader>gp" },
+    keys = { "n", "<leader>gp", map_opts("Push") },
     cat = "Git"
   },
   {
     desc = "Fetch",
     cmd = ":!git fetch<cr>",
-    keys = { "n", "<leader>gf" },
+    keys = { "n", "<leader>gf", map_opts("Fetch") },
     cat = "Git"
   },
   {
     desc = "LazyGit Client",
     cmd = "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
-    keys = { "n", "<leader>gf" },
+    keys = { "n", "<leader>gf", map_opts("LazyGit Client") },
     cat = "Git"
+  },
+  {
+    cmd = "<cmd><CR>",
+    keys = { "n", "<leader>g", map_opts("+ Git Tools") },
+    cat = "Git",
+    show = false,
   }
-
 }, {})
-
-
--- Register the descriptions for which-key
-require("which-key").register({
-  g = {
-    name = "+git",
-    s = 'Status',
-    a = 'Add All',
-    c = 'Commit',
-    p = 'Push',
-    f = 'Fetch',
-  }
-}, { prefix = "<leader>" })
 
 -- Lsp
 keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
@@ -226,11 +241,13 @@ vim.keymap.set("n", "<C-z>", "u", { noremap = true })
 vim.keymap.set("n", "<C-Shift-z>", "<C-r>")
 
 -- Select current line
-vim.keymap.set("n", "x", "V", { noremap = true })
+-- vim.keymap.set("n", "x", "V", { noremap = true })
+-- Use dd instead
 
 -- Toggle Comments
-vim.keymap.set("n", "<C-/>", "gcc", { noremap = true })
-vim.keymap.set("v", "<C-/>", "gc", { noremap = true })
+-- vim.keymap.set("n", "<C-/>", "gcc", { noremap = true })
+-- vim.keymap.set("v", "<C-/>", "gc", { noremap = true })
+--Use gcc instead
 
 -- Enter and exit Insert mode
 vim.keymap.set("n", "<BS>", "i")

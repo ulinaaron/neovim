@@ -7,9 +7,12 @@ local M = {
     {
       "nvim-lua/plenary.nvim",
       commit = "9a0d3bf7b832818c042aaf30f692b081ddd58bd9",
-    },   {
-      "ahmedkhalf/project.nvim",
-    },
+    }, {
+    "ahmedkhalf/project.nvim",
+  },
+    { 'nvim-telescope/telescope-fzf-native.nvim',
+      build =
+      'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' },
   },
 }
 

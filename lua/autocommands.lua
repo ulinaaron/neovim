@@ -1,10 +1,9 @@
-
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "qf", "help", "man", "lspinfo", "spectre_panel" },
   callback = function()
     vim.cmd [[
-      nnoremap <silent> <buffer> q :close<CR> 
-      set nobuflisted 
+      nnoremap <silent> <buffer> q :close<CR>
+      set nobuflisted
     ]]
   end,
 })
@@ -52,3 +51,19 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+  callback = function()
+    local api = require('nvim-tree.api').tree.open()
+  end
+
+})
+
+
+-- Auto command to move focus from Nvim tree to alpha startup plugin
+vim.cmd([[
+  augroup MoveFocus
+    au!
+    au FileType NvimTree nnoremap <buffer> <C-l> :Alpha<CR>
+  augroup END
+]])

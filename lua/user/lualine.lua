@@ -59,7 +59,7 @@ function M.config()
       lualine_c = { diagnostics },
       lualine_x = { diff, spaces, filetype },
       lualine_y = { location },
-      lualine_z = { },
+      lualine_z = {},
     },
   }
 end
