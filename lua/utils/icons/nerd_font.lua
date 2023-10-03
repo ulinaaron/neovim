@@ -1,4 +1,5 @@
 return {
+  AI = "",
   ActiveLSP = "",
   ActiveTS = "",
   ArrowLeft = "",
@@ -50,7 +51,7 @@ return {
   Search = "",
   Selected = "❯",
   Session = "󱂬",
-  Sort = "󰒺",
+  Sort = "󰒺",
   Spellcheck = "󰓆",
   Tab = "󰓩",
   TabClose = "󰅙",

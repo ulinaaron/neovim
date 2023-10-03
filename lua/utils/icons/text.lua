@@ -1,4 +1,5 @@
 return {
+  AI = "A",
   ActiveLSP = "LSP:",
   ArrowLeft = "<",
   ArrowRight = ">",

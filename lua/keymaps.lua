@@ -1,10 +1,12 @@
 local utils = require "utils"
+local ui = require "utils.ui"
 local get_icon = utils.get_icon
 local is_available = utils.is_available
 
 local maps = require("utils").empty_map_table()
 
 local sections = {
+  a = { desc = get_icon("AI", 1, true) .. "AI" },
   f = { desc = get_icon("Search", 1, true) .. "Find" },
   p = { desc = get_icon("Package", 1, true) .. "Packages" },
   l = { desc = get_icon("ActiveLSP", 1, true) .. "LSP" },
@@ -37,6 +39,11 @@ maps.n["<leader>ps"] = { function() require("lazy").home() end, desc = "Plugins 
 maps.n["<leader>pS"] = { function() require("lazy").sync() end, desc = "Plugins Sync" }
 maps.n["<leader>pu"] = { function() require("lazy").check() end, desc = "Plugins Check Updates" }
 maps.n["<leader>pU"] = { function() require("lazy").update() end, desc = "Plugins Update" }
+
+-- Artificial Intelligence
+maps.n["<leader>a"] = sections.a
+maps.n["<leader>ac"] = { "<cmd>CodyChat<cr>", desc = "Cody Chat" }
+
 
 -- Comment
 if is_available "Comment.nvim" then
@@ -100,12 +107,6 @@ else
   maps.n["<C-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" }
 end
 
--- SymbolsOutline
-if is_available "aerial.nvim" then
-  maps.n["<leader>l"] = sections.l
-  maps.n["<leader>lS"] = { function() require("aerial").toggle() end, desc = "Symbols outline" }
-end
-
 -- Telescope
 if is_available "telescope.nvim" then
   maps.n["<leader>f"] = sections.f
@@ -126,6 +127,46 @@ if is_available "telescope.nvim" then
   maps.n["<leader>f'"] = { function() require("telescope.builtin").marks() end, desc = "Find marks" }
   maps.n["<leader>f/"] =
   { function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find words in current buffer" }
+  maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Find buffers" }
+  maps.n["<leader>fc"] = { function() require("telescope.builtin").grep_string() end, desc = "Find word under cursor" }
+  maps.n["<leader>fC"] = { function() require("telescope.builtin").commands() end, desc = "Find commands" }
+  maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Find files" }
+  maps.n["<leader>fF"] = {
+    function() require("telescope.builtin").find_files { hidden = true, no_ignore = true } end,
+    desc = "Find all files",
+  }
+  maps.n["<leader>fh"] = { function() require("telescope.builtin").help_tags() end, desc = "Find help" }
+  maps.n["<leader>fk"] = { function() require("telescope.builtin").keymaps() end, desc = "Find keymaps" }
+  maps.n["<leader>fm"] = { function() require("telescope.builtin").man_pages() end, desc = "Find man" }
+  if is_available "nvim-notify" then
+    maps.n["<leader>fn"] =
+    { function() require("telescope").extensions.notify.notify() end, desc = "Find notifications" }
+  end
+  maps.n["<leader>fo"] = { function() require("telescope.builtin").oldfiles() end, desc = "Find history" }
+  maps.n["<leader>fr"] = { function() require("telescope.builtin").registers() end, desc = "Find registers" }
+  maps.n["<leader>ft"] =
+  { function() require("telescope.builtin").colorscheme { enable_preview = true } end, desc = "Find themes" }
+  maps.n["<leader>fw"] = { function() require("telescope.builtin").live_grep() end, desc = "Find words" }
+  maps.n["<leader>fW"] = {
+    function()
+      require("telescope.builtin").live_grep {
+        additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
+      }
+    end,
+    desc = "Find words in all files",
+  }
+  maps.n["<leader>l"] = sections.l
+  maps.n["<leader>ls"] = {
+    function()
+      local aerial_avail, _ = pcall(require, "aerial")
+      if aerial_avail then
+        require("telescope").extensions.aerial.aerial()
+      else
+        require("telescope.builtin").lsp_document_symbols()
+      end
+    end,
+    desc = "Search symbols",
+  }
 end
 
 -- Terminal
@@ -160,6 +201,40 @@ if is_available "toggleterm.nvim" then
   maps.n["<C-'>"] = maps.n["<F7>"] -- requires terminal that supports binding <C-'>
   maps.t["<C-'>"] = maps.n["<F7>"] -- requires terminal that supports binding <C-'>
 end
+
+-- Stay in indent mode
+maps.v["<S-Tab>"] = { "<gv", desc = "Unindent line" }
+maps.v["<Tab>"] = { ">gv", desc = "Indent line" }
+
+-- Improved Terminal Navigation
+maps.t["<C-h>"] = { "<cmd>wincmd h<cr>", desc = "Terminal left window navigation" }
+maps.t["<C-j>"] = { "<cmd>wincmd j<cr>", desc = "Terminal down window navigation" }
+maps.t["<C-k>"] = { "<cmd>wincmd k<cr>", desc = "Terminal up window navigation" }
+maps.t["<C-l>"] = { "<cmd>wincmd l<cr>", desc = "Terminal right window navigation" }
+
+maps.n["<leader>u"] = sections.u
+-- Custom menu for modification of the user experience
+if is_available "nvim-autopairs" then maps.n["<leader>ua"] = { ui.toggle_autopairs, desc = "Toggle autopairs" } end
+maps.n["<leader>ub"] = { ui.toggle_background, desc = "Toggle background" }
+if is_available "nvim-cmp" then maps.n["<leader>uc"] = { ui.toggle_cmp, desc = "Toggle autocompletion" } end
+if is_available "nvim-colorizer.lua" then
+  maps.n["<leader>uC"] = { "<cmd>ColorizerToggle<cr>", desc = "Toggle color highlight" }
+end
+maps.n["<leader>ud"] = { ui.toggle_diagnostics, desc = "Toggle diagnostics" }
+maps.n["<leader>ug"] = { ui.toggle_signcolumn, desc = "Toggle signcolumn" }
+maps.n["<leader>ui"] = { ui.set_indent, desc = "Change indent setting" }
+maps.n["<leader>ul"] = { ui.toggle_statusline, desc = "Toggle statusline" }
+maps.n["<leader>uL"] = { ui.toggle_codelens, desc = "Toggle CodeLens" }
+maps.n["<leader>un"] = { ui.change_number, desc = "Change line numbering" }
+maps.n["<leader>uN"] = { ui.toggle_ui_notifications, desc = "Toggle Notifications" }
+maps.n["<leader>up"] = { ui.toggle_paste, desc = "Toggle paste mode" }
+maps.n["<leader>us"] = { ui.toggle_spell, desc = "Toggle spellcheck" }
+maps.n["<leader>uS"] = { ui.toggle_conceal, desc = "Toggle conceal" }
+maps.n["<leader>ut"] = { ui.toggle_tabline, desc = "Toggle tabline" }
+maps.n["<leader>uu"] = { ui.toggle_url_match, desc = "Toggle URL highlight" }
+maps.n["<leader>uw"] = { ui.toggle_wrap, desc = "Toggle wrap" }
+maps.n["<leader>uy"] = { ui.toggle_syntax, desc = "Toggle syntax highlighting (buffer)" }
+maps.n["<leader>uh"] = { ui.toggle_foldcolumn, desc = "Toggle foldcolumn" }
 
 utils.set_mappings(maps)
 
