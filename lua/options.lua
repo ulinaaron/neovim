@@ -30,7 +30,8 @@ vim.opt.laststatus = 3                          -- only the last window will alw
 vim.opt.showcmd = false                         -- hide (partial) command in the last line of the screen (for performance)
 vim.opt.ruler = false                           -- hide the line and column number of the cursor position
 vim.opt.numberwidth = 4                         -- minimal number of columns to use for the line number {default 4}
-vim.opt.signcolumn = "yes"                      -- always show the sign column, otherwise it would shift the text each time
+vim.opt.signcolumn =
+"yes"                                           -- always show the sign column, otherwise it would shift the text each time
 vim.opt.wrap = false                            -- display lines as one long line
 vim.opt.scrolloff = 8                           -- minimal number of screen lines to keep above and below the cursor
 vim.opt.sidescrolloff = 8                       -- minimal number of screen columns to keep to the left and right of the cursor if wrap is `false`
@@ -42,31 +43,4 @@ vim.opt.iskeyword:append "-"                    -- treats words with `-` as sing
 vim.opt.formatoptions:remove { "c", "r", "o" }  -- This is a sequence of letters which describes how automatic formatting is to be done
 vim.opt.linebreak = true
 
------------------------------------------------------------
--- Neovide
------------------------------------------------------------
-if vim.g.neovide then
-  vim.o.guifont = "Hasklug Nerd Font:h13:#e-subpixelantialias:#h-slight"
-
-  -- Helper function for transparency formatting
-  local alpha = function()
-    return string.format("%x", math.floor((255 * vim.g.transparency) or 0.8))
-  end
-  -- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-  vim.g.neovide_transparency = 0.0
-  vim.g.transparency = 0.93
-  vim.g.neovide_background_color = "#24283b" .. alpha()
-
-  vim.g.neovide_floating_blur_amount_x = 1.0
-  vim.g.neovide_floating_blur_amount_y = 1.0
-  vim.g.neovide_input_macos_alt_is_meta = true
-
-  vim.g.neovide_padding_top = 24
-  vim.g.neovide_padding_bottom = 0
-  vim.g.neovide_padding_right = -1
-  vim.g.neovide_padding_left = -1
-
-  vim.g.neovide_scale_factor = 1.20
-  vim.g.neovide_hide_mouse_when_typing = true
-  vim.g.neovide_cursor_vfx_mode = "ripple"
-end
+vim.g.icons_enabled = true

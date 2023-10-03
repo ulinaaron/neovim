@@ -27,22 +27,6 @@ require("lazy").setup({
     event = "VeryLazy",
     commit = "724bd53adfbaf32e129b001658b45d4c5c29ca1a"
   },
-  {
-    '00sapo/visual.nvim',
-    config = function()
-      require('visual').setup({
-        commands = {
-          move_up_then_normal = { amend = true },
-          move_down_then_normal = { amend = true },
-          move_right_then_normal = { amend = true },
-          move_left_then_normal = { amend = true },
-        },
-      })
-    end,
-    opts = { treesitter_textobjects = true },
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-treesitter/nvim-treesitter-textobjects" },
-    event = "VeryLazy"
-  },
   { import = "user" }
 }, {
   install = { colorscheme = { require("user.theme_nightfox").name } },
