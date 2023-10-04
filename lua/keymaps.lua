@@ -50,9 +50,39 @@ maps.n["<leader>pU"] = { function() require("lazy").update() end, desc = "Plugin
 maps.n["<leader>a"] = sections.a
 maps.n["<leader>ac"] = { "<cmd>CodyChat<cr>", desc = "Cody Chat" }
 
--- Manage Buffers
+-- Buffer Navigation
+maps.n["<A-,>"] = { "<Cmd>BufferPrevious<CR>", desc = "Previous Buffer" }
+maps.n["<A-.>"] = { "<Cmd>BufferNext<CR>", desc = "Next Buffer" }
 
+maps.n["<A-<>"] = { "<Cmd>BufferMovePrevious<CR>", desc = "Re-order Buffer Previous" }
+maps.n["<A->>"] = { "<Cmd>BufferMoveNext<CR>", desc = "Re-order Buffer Next" }
 
+-- Buffer Selection
+maps.n["<A-1>"] = { "<Cmd>BufferGoto 1<CR>", desc = "Goto Buffer 1" }
+maps.n["<A-2>"] = { "<Cmd>BufferGoto 2<CR>", desc = "Goto Buffer 2" }
+maps.n["<A-3>"] = { "<Cmd>BufferGoto 3<CR>", desc = "Goto Buffer 3" }
+maps.n["<A-4>"] = { "<Cmd>BufferGoto 4<CR>", desc = "Goto Buffer 4" }
+maps.n["<A-5>"] = { "<Cmd>BufferGoto 5<CR>", desc = "Goto Buffer 5" }
+maps.n["<A-6>"] = { "<Cmd>BufferGoto 6<CR>", desc = "Goto Buffer 6" }
+maps.n["<A-7>"] = { "<Cmd>BufferGoto 7<CR>", desc = "Goto Buffer 7" }
+maps.n["<A-8>"] = { "<Cmd>BufferGoto 8<CR>", desc = "Goto Buffer 8" }
+maps.n["<A-9>"] = { "<Cmd>BufferGoto 9<CR>", desc = "Goto Buffer 9" }
+maps.n["<A-0>"] = { "<Cmd>BufferLast<CR>", desc = "Goto Last Buffer" }
+-- Pin/unpin buffer
+maps.n["<A-p>"] = { "<Cmd>BufferPin<CR>", desc = "Pin/Unpin Buffer" }
+
+-- Close buffer
+maps.n["<A-c>"] = { "<Cmd>BufferClose<CR>", desc = "Close Buffer" }
+maps.n["<leader>c"] = { "<Cmd>BufferClose<CR>", desc = "Close Current Buffer" }
+
+-- Magic buffer-picking mode
+maps.n["<C-p>"] = { "<Cmd>BufferPick<CR>", desc = "Pick Buffer" }
+
+-- Sort buffers automatically by...
+maps.n["<Space>bb"] = { "<Cmd>BufferOrderByBufferNumber<CR>", desc = "Sort Buffers By Number" }
+maps.n["<Space>bd"] = { "<Cmd>BufferOrderByDirectory<CR>", desc = "Sort Buffers By Directory" }
+maps.n["<Space>bl"] = { "<Cmd>BufferOrderByLanguage<CR>", desc = "Sort Buffers By Language" }
+maps.n["<Space>bw"] = { "<Cmd>BufferOrderByWindowNumber<CR>", desc = "Sort Buffers By Window Number" }
 
 -- Comment
 if is_available "Comment.nvim" then
