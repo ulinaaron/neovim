@@ -27,6 +27,10 @@ require("lazy").setup({
     event = "VeryLazy",
     commit = "724bd53adfbaf32e129b001658b45d4c5c29ca1a"
   },
+  {
+    "mrjones2014/smart-splits.nvim",
+    opts = { ignored_filetypes = { "nofile", "quickfix", "qf", "prompt" }, ignored_buftypes = { "nofile" } },
+  },
   { import = "user" }
 }, {
   install = { colorscheme = { require("user.theme_nightfox").name } },

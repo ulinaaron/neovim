@@ -8,12 +8,13 @@ local maps = require("utils").empty_map_table()
 local sections = {
   a = { desc = get_icon("AI", 1, true) .. "AI" },
   f = { desc = get_icon("Search", 1, true) .. "Find" },
-  p = { desc = get_icon("Package", 1, true) .. "Packages" },
+  v = { desc = get_icon("Ellipsis", 1, true) .. "View" },
+  u = { desc = get_icon("Package", 1, true) .. "Utilities" },
   l = { desc = get_icon("ActiveLSP", 1, true) .. "LSP" },
-  u = { desc = get_icon("Window", 1, true) .. "UI/UX" },
+  p = { desc = get_icon("Window", 1, true) .. "Preferences" },
   b = { desc = get_icon("Tab", 1, true) .. "Buffers" },
   bs = { desc = get_icon("Sort", 1, true) .. "Sort Buffers" },
-  d = { desc = get_icon("Debugger", 1, true) .. "Debugger" },
+  -- d = { desc = get_icon("Debugger", 1, true) .. "Debugger" },
   g = { desc = get_icon("Git", 1, true) .. "Git" },
   S = { desc = get_icon("Session", 1, true) .. "Session" },
   t = { desc = get_icon("Terminal", 1, true) .. "Terminal" },
@@ -26,6 +27,8 @@ maps.n["k"] = { "v:count == 0 ? 'gk' : 'k'", expr = true, desc = "Move cursor up
 maps.n["<leader>w"] = { "<cmd>w<cr>", desc = "Save" }
 maps.n["<leader>q"] = { "<cmd>confirm q<cr>", desc = "Quit" }
 maps.n["<leader>n"] = { "<cmd>enew<cr>", desc = "New File" }
+maps.n["<leader>e"] = { "<cmd>NvimTreeToggle<CR>", desc = "File Explorer" }
+
 maps.n["<C-s>"] = { "<cmd>w!<cr>", desc = "Force write" }
 maps.n["<C-q>"] = { "<cmd>qa!<cr>", desc = "Force quit" }
 maps.n["|"] = { "<cmd>vsplit<cr>", desc = "Vertical Split" }
@@ -44,6 +47,41 @@ maps.n["<leader>pU"] = { function() require("lazy").update() end, desc = "Plugin
 maps.n["<leader>a"] = sections.a
 maps.n["<leader>ac"] = { "<cmd>CodyChat<cr>", desc = "Cody Chat" }
 
+-- Manage Buffers
+maps.n["<leader>c"] = { function() require("utils.buffer").close() end, desc = "Close buffer" }
+maps.n["<leader>C"] = { function() require("utils.buffer").close(0, true) end, desc = "Force close buffer" }
+maps.n["]b"] =
+{ function() require("utils.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end, desc = "Next buffer" }
+maps.n["[b"] = {
+  function() require("utils.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
+  desc = "Previous buffer",
+}
+maps.n[">b"] = {
+  function() require("utils.buffer").move(vim.v.count > 0 and vim.v.count or 1) end,
+  desc = "Move buffer tab right",
+}
+maps.n["<b"] = {
+  function() require("utils.buffer").move(-(vim.v.count > 0 and vim.v.count or 1)) end,
+  desc = "Move buffer tab left",
+}
+
+maps.n["<leader>b"] = sections.b
+maps.n["<leader>bc"] =
+{ function() require("utils.buffer").close_all(true) end, desc = "Close all buffers except current" }
+maps.n["<leader>bC"] = { function() require("utils.buffer").close_all() end, desc = "Close all buffers" }
+maps.n["<leader>bl"] =
+{ function() require("utils.buffer").close_left() end, desc = "Close all buffers to the left" }
+maps.n["<leader>bp"] = { function() require("utils.buffer").prev() end, desc = "Previous buffer" }
+maps.n["<leader>br"] =
+{ function() require("utils.buffer").close_right() end, desc = "Close all buffers to the right" }
+maps.n["<leader>bs"] = sections.bs
+maps.n["<leader>bse"] = { function() require("utils.buffer").sort "extension" end, desc = "By extension" }
+maps.n["<leader>bsr"] =
+{ function() require("utils.buffer").sort "unique_path" end, desc = "By relative path" }
+maps.n["<leader>bsp"] = { function() require("utils.buffer").sort "full_path" end, desc = "By full path" }
+maps.n["<leader>bsi"] = { function() require("utils.buffer").sort "bufnr" end, desc = "By buffer number" }
+maps.n["<leader>bsm"] = { function() require("utils.buffer").sort "modified" end, desc = "By modification" }
+
 
 -- Comment
 if is_available "Comment.nvim" then
@@ -54,29 +92,6 @@ if is_available "Comment.nvim" then
   maps.v["<leader>/"] = {
     "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>",
     desc = "Toggle comment for selection",
-  }
-end
-
--- Session Manager
-if is_available "neovim-session-manager" then
-  maps.n["<leader>S"] = sections.S
-  maps.n["<leader>Sl"] = { "<cmd>SessionManager! load_last_session<cr>", desc = "Load last session" }
-  maps.n["<leader>Ss"] = { "<cmd>SessionManager! save_current_session<cr>", desc = "Save this session" }
-  maps.n["<leader>Sd"] = { "<cmd>SessionManager! delete_session<cr>", desc = "Delete session" }
-  maps.n["<leader>Sf"] = { "<cmd>SessionManager! load_session<cr>", desc = "Search sessions" }
-  maps.n["<leader>S."] =
-  { "<cmd>SessionManager! load_current_dir_session<cr>", desc = "Load current directory session" }
-end
-if is_available "resession.nvim" then
-  maps.n["<leader>S"] = sections.S
-  maps.n["<leader>Sl"] = { function() require("resession").load "Last Session" end, desc = "Load last session" }
-  maps.n["<leader>Ss"] = { function() require("resession").save() end, desc = "Save this session" }
-  maps.n["<leader>St"] = { function() require("resession").save_tab() end, desc = "Save this tab's session" }
-  maps.n["<leader>Sd"] = { function() require("resession").delete() end, desc = "Delete a session" }
-  maps.n["<leader>Sf"] = { function() require("resession").load() end, desc = "Load a session" }
-  maps.n["<leader>S."] = {
-    function() require("resession").load(vim.fn.getcwd(), { dir = "dirsession" }) end,
-    desc = "Load current directory session",
   }
 end
 
@@ -111,6 +126,7 @@ end
 if is_available "telescope.nvim" then
   maps.n["<leader>f"] = sections.f
   maps.n["<leader>g"] = sections.g
+  maps.n["<leader>v"] = sections.v
   maps.n["<leader>gb"] =
   { function() require("telescope.builtin").git_branches { use_file_path = true } end, desc = "Git branches" }
   maps.n["<leader>gc"] = {
@@ -127,25 +143,26 @@ if is_available "telescope.nvim" then
   maps.n["<leader>f'"] = { function() require("telescope.builtin").marks() end, desc = "Find marks" }
   maps.n["<leader>f/"] =
   { function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find words in current buffer" }
-  maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Find buffers" }
+  maps.n["<leader>vb"] = { function() require("telescope.builtin").buffers() end, desc = "View Buffers" }
   maps.n["<leader>fc"] = { function() require("telescope.builtin").grep_string() end, desc = "Find word under cursor" }
-  maps.n["<leader>fC"] = { function() require("telescope.builtin").commands() end, desc = "Find commands" }
-  maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Find files" }
+  maps.n["<leader>vc"] = { function() require("telescope.builtin").commands() end, desc = "View Commands" }
+  maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Find Files" }
   maps.n["<leader>fF"] = {
     function() require("telescope.builtin").find_files { hidden = true, no_ignore = true } end,
-    desc = "Find all files",
+    desc = "Find Files (Hidden)",
   }
-  maps.n["<leader>fh"] = { function() require("telescope.builtin").help_tags() end, desc = "Find help" }
-  maps.n["<leader>fk"] = { function() require("telescope.builtin").keymaps() end, desc = "Find keymaps" }
-  maps.n["<leader>fm"] = { function() require("telescope.builtin").man_pages() end, desc = "Find man" }
+  maps.n["<leader>fp"] = { "<cmd>Telescope projects<CR>", desc = "Find Projects" }
+  maps.n["<leader>vh"] = { function() require("telescope.builtin").help_tags() end, desc = "View Help" }
+  maps.n["<leader>vk"] = { function() require("telescope.builtin").keymaps() end, desc = "View Keymaps" }
+  maps.n["<leader>vm"] = { function() require("telescope.builtin").man_pages() end, desc = "View Manual (Man)" }
   if is_available "nvim-notify" then
-    maps.n["<leader>fn"] =
-    { function() require("telescope").extensions.notify.notify() end, desc = "Find notifications" }
+    maps.n["<leader>vn"] =
+    { function() require("telescope").extensions.notify.notify() end, desc = "View notifications" }
   end
-  maps.n["<leader>fo"] = { function() require("telescope.builtin").oldfiles() end, desc = "Find history" }
-  maps.n["<leader>fr"] = { function() require("telescope.builtin").registers() end, desc = "Find registers" }
-  maps.n["<leader>ft"] =
-  { function() require("telescope.builtin").colorscheme { enable_preview = true } end, desc = "Find themes" }
+  maps.n["<leader>fr"] = { function() require("telescope.builtin").oldfiles() end, desc = "Find Recent Files" }
+  maps.n["<leader>fR"] = { function() require("telescope.builtin").registers() end, desc = "Find Registers" }
+  maps.n["<leader>vt"] =
+  { function() require("telescope.builtin").colorscheme { enable_preview = true } end, desc = "View themes" }
   maps.n["<leader>fw"] = { function() require("telescope.builtin").live_grep() end, desc = "Find words" }
   maps.n["<leader>fW"] = {
     function()
@@ -180,7 +197,7 @@ if is_available "toggleterm.nvim" then
         local flags = worktree and (" --work-tree=%s --git-dir=%s"):format(worktree.toplevel, worktree.gitdir) or ""
         utils.toggle_term_cmd("lazygit " .. flags)
       end,
-      desc = "ToggleTerm lazygit",
+      desc = "Git Client (LazyGit)",
     }
     maps.n["<leader>tl"] = maps.n["<leader>gg"]
   end
@@ -252,171 +269,9 @@ function map_opts(desc)
   }
 end
 
--- Modes
---   normal_mode = "n",
---   insert_mode = "i",
---   visual_mode = "v",
---   visual_block_mode = "x",
---   term_mode = "t",
---   command_mode = "c",
-
 --Remap space as leader key
 keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
-
--- Commander
-commander.add({
-  {
-    cmd = "<CMD>Telescope commander<CR>",
-    keys = { { "n", "i", "v" }, "<C-S-P>", opts },
-    show = false
-  },
-  {
-    desc = "File Explorer",
-    cmd = ":NvimTreeToggle<CR>",
-    keys = { "n", "<leader>e", map_opts("File Explorer") },
-    cat = "General"
-  },
-}, {})
-
--- Normal --
-
-commander.add({
-  {
-    desc = "Navigate Window - Left",
-    cmd = "<C-w>h",
-    keys = { "n", "<C-h>" },
-  },
-  {
-    desc = "Navigate Window - down",
-    cmd = "<C-w>j",
-    keys = { "n", "<C-j>" },
-  },
-  {
-    desc = "Navigate Window - up",
-    cmd = "<C-w>k",
-    keys = { "n", "<c-k>" },
-  },
-  {
-    desc = "navigate window - right",
-    cmd = "<c-w>l",
-    keys = { "n", "<c-l>" },
-  },
-  {
-    desc = "navigate buffers - next",
-    cmd = ":bnext<cr>",
-    keys = { "n", "<s-left>" },
-  },
-  {
-    desc = "Navigate buffers - Previous",
-    cmd = ":bprevious<CR>",
-    keys = { "n", "<S-Right>" },
-  },
-  {
-    desc = "Close buffers",
-    cmd = "<cmd>Bdelete!<CR>",
-    keys = { "n", "<S-q>" },
-  },
-  {
-    desc = "Quit",
-    cmd = ":qa!<CR>",
-    keys = { "n", "<C-q>" },
-    cat = "General"
-  },
-  {
-    desc = "Paste",
-    cmd = "P",
-    keys = { "v", "p" },
-  },
-}, {})
-
--- Insert --
--- Press jk fast to enter
-keymap("i", "jk", "<ESC>", opts)
-
--- Visual --
--- Stay in indent mode
-keymap("v", "<", "<gv", opts)
-keymap("v", ">", ">gv", opts)
-
--- Plugins --
-
--- Telescope
--- commander.add({
---   {
---     desc = "Find Files",
---     cmd = ":Telescope find_files<CR>",
---     keys = { "n", "<leader>ff", map_opts("Find Files") },
---     cat = "Find"
---   },
---   {
---     desc = "Find Keyword Globally",
---     cmd = ":Telescope live_grep<CR>",
---     keys = { "n", "<leader>ft", map_opts("Find Keyword Globally") },
---     cat = "Find"
---   },
---   {
---     desc = "Projects",
---     cmd = ":Telescope projects<CR>",
---     keys = { "n", "<leader>fp", map_opts("Find Projects") },
---     cat = "Find"
---   },
---   {
---     desc = "Buffers",
---     cmd = ":Telescope buffers<CR>",
---     keys = { "n", "<leader>fb", map_opts("Find Buffers") },
---     cat = "Find"
---   },
---   {
---     cmd = ":Telescope find_files<CR>", -- Replace this with the default action you want for "<leader>f"
---     keys = { "n", "<leader>f", map_opts("+ Find") },
---     cat = "Find",
---     show = false
---   }
--- }, {})
-
--- Git
--- keymap("n", "<leader>g", )
--- keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", map_opts("Git Client"))
-
--- commander.add({
---   {
---     desc = "Status",
---     cmd = ":!git status<cr>",
---     keys = { "n", "<leader>gs", map_opts("Status") },
---     cat = "Git"
---   },
---   {
---     desc = "Add All",
---     cmd = ":!git add .<cr>",
---     keys = { "n", "<leader>ga", map_opts("Add All") },
---     cat = "Git"
---   },
---   {
---     desc = "Commit",
---     cmd = ":!git commit<cr>",
---     keys = { "n", "<leader>gc", map_opts("Commit") },
---     cat = "Git"
---   },
---   {
---     desc = "Push",
---     cmd = ":!git push<cr>",
---     keys = { "n", "<leader>gp", map_opts("Push") },
---     cat = "Git"
---   },
---   {
---     desc = "Fetch",
---     cmd = ":!git fetch<cr>",
---     keys = { "n", "<leader>gf", map_opts("Fetch") },
---     cat = "Git"
---   },
---   {
---     desc = "LazyGit Client",
---     cmd = "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
---     keys = { "n", "<leader>gf", map_opts("LazyGit Client") },
---     cat = "Git"
---   },
--- }, {})
 
 -- Copy all
 vim.keymap.set("n", "<C-c>", '"+y')
@@ -465,41 +320,6 @@ vim.keymap.set("v", "<C-/>", "gc", { noremap = true })
 vim.keymap.set("n", "<BS>", "i")
 vim.keymap.set("n", "i", "i")
 
--- Go to start of line
-vim.keymap.set("i", "<A-S-Left>", "<ESC>I", { noremap = true })
-vim.keymap.set("n", "<A-S-Left>", "^", { noremap = true })
-vim.keymap.set("v", "<A-S-Left>", "^", { noremap = true })
-
--- Go to end of line
-vim.keymap.set("i", "<A-S-Right>", "<ESC>A", { noremap = true })
-vim.keymap.set("n", "<A-S-Right>", "$", { noremap = true })
-vim.keymap.set("v", "<A-S-Right>", "$", { noremap = true })
-
--- Go to top of screen
-vim.keymap.set("n", "<A-S-Up>", "<C-u>", { noremap = true })
-vim.keymap.set("v", "<A-S-Up>", "<C-u>", { noremap = true })
-vim.keymap.set("i", "<A-S-Up>", "<C-o><C-u>", { noremap = true })
-
--- Go to bottom of screen
-vim.keymap.set("n", "<A-S-Down>", "<C-d>", { noremap = true })
-vim.keymap.set("v", "<A-S-Down>", "<C-d>", { noremap = true })
-vim.keymap.set("i", "<A-S-Down>", "<C-o><C-d>", { noremap = true })
-
--- Keybinding to move up 5 lines in all modes
-vim.keymap.set("n", "<S-Up>", "5k", { noremap = true, silent = true })
-vim.keymap.set("i", "<S-Up>", "<Esc>5ki", { noremap = true, silent = true })
-vim.keymap.set("v", "<S-Up>", "<Esc>5k", { noremap = true, silent = true })
-
--- Keybinding to move down 5 lines in all modes
-vim.keymap.set("n", "<S-Down>", "5j", { noremap = true, silent = true })
-vim.keymap.set("i", "<S-Down>", "<Esc>5ji", { noremap = true, silent = true })
-vim.keymap.set("v", "<S-Down>", "<Esc>5j", { noremap = true, silent = true })
-
--- Keybinding to move the current line up one in all modes
--- vim.keymap.set("n", "<A-S-Up>", ":<C-u>move-2<CR>", { noremap = true, silent = true })
--- vim.keymap.set("i", "<A-S-Up>", "<Esc>:<C-u>move-2<CR>==gi", { noremap = true, silent = true })
--- vim.keymap.set("v", "<A-S-Up>", ":<C-u>move-2<CR>gv=gv", { noremap = true, silent = true })
-
 -- Indenting
 commander.add({
   {
@@ -527,11 +347,6 @@ commander.add({
     cat = "Indenting"
   },
 }, {})
-
--- Buffers
-vim.keymap.set("n", "<A-,>", "<C-^>", { noremap = true })
-vim.keymap.set("n", "<A-.>", "<C-6>", { noremap = true })
-vim.keymap.set("n", "<A-w>", ":bdelete<CR>", { noremap = true })
 
 -- Util
 vim.api.nvim_set_keymap('n', '<esc>', '<esc>', { noremap = true })
