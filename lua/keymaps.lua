@@ -18,7 +18,10 @@ local sections = {
   g = { desc = get_icon("Git", 1, true) .. "Git" },
   S = { desc = get_icon("Session", 1, true) .. "Session" },
   t = { desc = get_icon("Terminal", 1, true) .. "Terminal" },
+  w = { desc = "Workspace" }
 }
+
+maps.n["<leader>w"] = sections.w
 
 -- Normal --
 -- Standard Operations
@@ -48,39 +51,7 @@ maps.n["<leader>a"] = sections.a
 maps.n["<leader>ac"] = { "<cmd>CodyChat<cr>", desc = "Cody Chat" }
 
 -- Manage Buffers
-maps.n["<leader>c"] = { function() require("utils.buffer").close() end, desc = "Close buffer" }
-maps.n["<leader>C"] = { function() require("utils.buffer").close(0, true) end, desc = "Force close buffer" }
-maps.n["]b"] =
-{ function() require("utils.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end, desc = "Next buffer" }
-maps.n["[b"] = {
-  function() require("utils.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
-  desc = "Previous buffer",
-}
-maps.n[">b"] = {
-  function() require("utils.buffer").move(vim.v.count > 0 and vim.v.count or 1) end,
-  desc = "Move buffer tab right",
-}
-maps.n["<b"] = {
-  function() require("utils.buffer").move(-(vim.v.count > 0 and vim.v.count or 1)) end,
-  desc = "Move buffer tab left",
-}
 
-maps.n["<leader>b"] = sections.b
-maps.n["<leader>bc"] =
-{ function() require("utils.buffer").close_all(true) end, desc = "Close all buffers except current" }
-maps.n["<leader>bC"] = { function() require("utils.buffer").close_all() end, desc = "Close all buffers" }
-maps.n["<leader>bl"] =
-{ function() require("utils.buffer").close_left() end, desc = "Close all buffers to the left" }
-maps.n["<leader>bp"] = { function() require("utils.buffer").prev() end, desc = "Previous buffer" }
-maps.n["<leader>br"] =
-{ function() require("utils.buffer").close_right() end, desc = "Close all buffers to the right" }
-maps.n["<leader>bs"] = sections.bs
-maps.n["<leader>bse"] = { function() require("utils.buffer").sort "extension" end, desc = "By extension" }
-maps.n["<leader>bsr"] =
-{ function() require("utils.buffer").sort "unique_path" end, desc = "By relative path" }
-maps.n["<leader>bsp"] = { function() require("utils.buffer").sort "full_path" end, desc = "By full path" }
-maps.n["<leader>bsi"] = { function() require("utils.buffer").sort "bufnr" end, desc = "By buffer number" }
-maps.n["<leader>bsm"] = { function() require("utils.buffer").sort "modified" end, desc = "By modification" }
 
 
 -- Comment
