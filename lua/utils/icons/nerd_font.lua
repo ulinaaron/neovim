@@ -48,6 +48,7 @@ return {
   Package = "󰏖",
   Paste = "󰅌",
   Refresh = "",
+  Space = "󱁐",
   Search = "",
   Selected = "❯",
   Session = "󱂬",

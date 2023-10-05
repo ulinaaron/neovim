@@ -2,6 +2,7 @@ local M = {
   "nvim-lualine/lualine.nvim",
   commit = "0050b308552e45f7128f399886c86afefc3eb988",
   event = { "VimEnter", "InsertEnter", "BufReadPre", "BufAdd", "BufNew", "BufReadPost" },
+  dependencies = { "nvim-tree/nvim-web-devicons", "meuter/lualine-so-fancy.nvim" },
 }
 
 function M.config()
@@ -10,39 +11,49 @@ function M.config()
     return
   end
 
+  local utils = require "utils"
+
+  local get_icon = utils.get_icon
+
   local hide_in_width = function()
     return vim.fn.winwidth(0) > 80
   end
 
-  local diagnostics = {
-    "diagnostics",
-    sources = { "nvim_diagnostic" },
-    sections = { "error", "warn" },
-    symbols = { error = " ", warn = " " },
-    colored = false,
-    always_visible = true,
+  local branch = {
+    "branch",
+    symbols = {
+      icon = get_icon("Git", 2, true)
+    }
   }
 
-  local diff = {
-    "diff",
-    colored = false,
-    symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
-    cond = hide_in_width,
+
+  -- stylua: ignore
+  local modeMap = {
+    ['NORMAL'] = '',
+    ['O-PENDING'] = 'O-PENDING',
+    ['VISUAL'] = '',
+    ['V-LINE'] = '',
+    ['V-BLOCK'] = '',
+    ['SELECT'] = 'SELECT',
+    ['S-LINE'] = 'S-LINE',
+    ['S-BLOCK'] = 'S-BLOCK',
+    ['INSERT'] = '',
+    ['REPLACE'] = 'REPLACE',
+    ['V-REPLACE'] = 'V-REPLACE',
+    ['COMMAND'] = 'COMMAND',
+    ['EX'] = 'EX',
+    ['SHELL'] = 'SHELL',
+    ['TERMINAL'] = 'TERMINAL',
   }
 
-  local filetype = {
-    "filetype",
-    icons_enabled = false,
-  }
-
-  local location = {
-    "location",
-    padding = 0,
-  }
+  local modeFormat = function(str)
+    return modeMap[str]
+  end
 
   local spaces = function()
-    return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth")
+    return get_icon("Space", 1, true) .. vim.api.nvim_buf_get_option(0, "shiftwidth")
   end
+
   lualine.setup {
     options = {
       globalstatus = true,
@@ -52,14 +63,21 @@ function M.config()
       section_separators = { left = "", right = "" },
       disabled_filetypes = { "alpha", "dashboard" },
       always_divide_middle = true,
+      extensions = {
+        "lazy",
+        "nvim-tree",
+        "toggleterm"
+      }
     },
     sections = {
-      lualine_a = { "mode" },
-      lualine_b = { "branch" },
-      lualine_c = { diagnostics },
-      lualine_x = { diff, spaces, filetype },
-      lualine_y = { location },
-      lualine_z = {},
+      lualine_a = { { "mode", fmt = function(str) return modeFormat(str) end } },
+      lualine_b = { branch, "fancy_diff" },
+      lualine_c = {
+        { "fancy_cwd", substitute_home = true }
+      },
+      lualine_x = { "fancy_diagnostics", "fancy_filetype" },
+      lualine_y = { spaces },
+      lualine_z = { { "location", padding = 0 } }
     },
   }
 end

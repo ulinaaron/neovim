@@ -36,6 +36,7 @@ return {
   MacroRecording = "Recording:",
   Paste = "[PASTE]",
   Search = "?",
+  Space = "_",
   Selected = "*",
   Spellcheck = "[SPELL]",
   TabClose = "X",
