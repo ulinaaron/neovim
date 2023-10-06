@@ -29,7 +29,7 @@ function M.config()
 
   -- stylua: ignore
   local modeMap = {
-    ['NORMAL'] = '',
+    ['NORMAL'] = '',
     ['O-PENDING'] = 'O-PENDING',
     ['VISUAL'] = '',
     ['V-LINE'] = '',

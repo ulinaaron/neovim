@@ -153,6 +153,7 @@ if is_available "telescope.nvim" then
     desc = "Find Files (Hidden)",
   }
   maps.n["<leader>fp"] = { "<cmd>Telescope projects<CR>", desc = "Find Projects" }
+  maps.n["<leader>ft"] = { "<cmd>TodoTelescope<CR>", desc = "Find TODOs" }
   maps.n["<leader>vh"] = { function() require("telescope.builtin").help_tags() end, desc = "View Help" }
   maps.n["<leader>vk"] = { function() require("telescope.builtin").keymaps() end, desc = "View Keymaps" }
   maps.n["<leader>vm"] = { function() require("telescope.builtin").man_pages() end, desc = "View Manual (Man)" }
@@ -253,6 +254,16 @@ maps.n["<leader>uu"] = { ui.toggle_url_match, desc = "Toggle URL highlight" }
 maps.n["<leader>uw"] = { ui.toggle_wrap, desc = "Toggle wrap" }
 maps.n["<leader>uy"] = { ui.toggle_syntax, desc = "Toggle syntax highlighting (buffer)" }
 maps.n["<leader>uh"] = { ui.toggle_foldcolumn, desc = "Toggle foldcolumn" }
+
+
+maps.n["<leader>xx"] = { function() require("trouble").open() end, desc = "Open Trouble" }
+maps.n["<leader>xw"] = { function() require("trouble").open("workspace_diagnostics") end,
+  desc = "Open Trouble (Workspace Diagnostics)" }
+maps.n["<leader>xd"] = { function() require("trouble").open("document_diagnostics") end,
+  desc = "Open Trouble (Document Diagnostics)" }
+maps.n["<leader>xq"] = { function() require("trouble").open("quickfix") end, desc = "Open Trouble (Quickfix)" }
+maps.n["<leader>xl"] = { function() require("trouble").open("loclist") end, desc = "Open Trouble (Location List)" }
+maps.n["gR"] = { function() require("trouble").open("lsp_references") end, desc = "Open Trouble (LSP References)" }
 
 utils.set_mappings(maps)
 

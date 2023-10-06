@@ -1,7 +1,8 @@
 local M = {
   "nvim-treesitter/nvim-treesitter",
   commit = "226c1475a46a2ef6d840af9caa0117a439465500",
-  event = "BufReadPost",
+  build = ":TSUpdate",
+  event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     {
       "JoosepAlviste/nvim-ts-context-commentstring",
@@ -16,6 +17,7 @@ local M = {
       'HiPhish/nvim-ts-rainbow2',
       event = "VeryLazy",
       commit = "b3120cd5ae9ca524af9cb602f41e12e301fa985f",
+      build = ":TSUpdate",
       config = function()
         -- lazy = true,
         require('nvim-treesitter.configs').setup {
@@ -36,33 +38,49 @@ local M = {
     },
     {
       "gbprod/php-enhanced-treesitter.nvim"
-    }
+    },
   },
 }
 function M.config()
-  local treesitter = require "nvim-treesitter"
   local configs = require "nvim-treesitter.configs"
 
-  configs.setup {
-    ensure_installed = { "lua", "markdown", "markdown_inline", "bash", "python", "php" }, -- put the language you want in this array
-    -- ensure_installed = "all", -- one of "all" or a list of languages
-    ignore_install = { "" },                                                              -- List of parsers to ignore installing
-    sync_install = false,                                                                 -- install languages synchronously (only applied to `ensure_installed`)
-
+  configs.setup({
     highlight = {
-      enable = true,       -- false will disable the whole extension
-      disable = { "css" }, -- list of language that will be disabled
-    },
-    autopairs = {
       enable = true,
     },
-    indent = { enable = true, disable = { "python", "css" } },
-
-    context_commentstring = {
-      enable = true,
-      enable_autocmd = false,
+    -- enable indentation
+    indent = { enable = true },
+    -- ensure these language parsers are installed
+    ensure_installed = {
+      "json",
+      "javascript",
+      "typescript",
+      "tsx",
+      "yaml",
+      "html",
+      "css",
+      "prisma",
+      "markdown",
+      "markdown_inline",
+      "svelte",
+      "graphql",
+      "bash",
+      "lua",
+      "vim",
+      "dockerfile",
+      "gitignore",
+      "query",
     },
-  }
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "<C-space>",
+        node_incremental = "<C-space>",
+        scope_incremental = false,
+        node_decremental = "<bs>",
+      },
+    },
+  })
 end
 
 return M
