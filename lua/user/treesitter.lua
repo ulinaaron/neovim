@@ -39,6 +39,18 @@ local M = {
     {
       "gbprod/php-enhanced-treesitter.nvim"
     },
+    {
+      "windwp/nvim-ts-autotag",
+      opts = {
+        autotag = {
+          enable_close_on_slash = false,
+          filetypes = {
+            'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx',
+            'rescript', 'xml', 'php', 'markdown', 'astro', 'glimmer', 'handlebars', 'hbs', "tpl"
+          }
+        }
+      }
+    },
   },
 }
 function M.config()

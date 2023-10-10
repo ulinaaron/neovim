@@ -30,11 +30,36 @@ local M = {
         "rafamadriz/friendly-snippets",
         commit = "a6f7a1609addb4e57daa6bedc300f77f8d225ab7",
       },
+      config = function()
+        vim.tbl_map(function(type) require("luasnip.loaders.from_" .. type).lazy_load() end,
+          { "vscode", "snipmate", "lua" })
+      end,
     },
     {
       "hrsh7th/cmp-nvim-lua",
       commit = "f3491638d123cfd2c8048aefaf66d246ff250ca6",
     },
+    {
+      'tzachar/cmp-tabnine',
+      build = './install.sh',
+      config = function()
+        local tabnine = require('cmp_tabnine.config')
+
+        tabnine:setup({
+          max_lines = 1000,
+          max_num_results = 20,
+          sort = true,
+          run_on_every_keystroke = true,
+          snippet_placeholder = '..',
+          ignored_file_types = {
+            -- default is not to ignore
+            -- uncomment to ignore in lua:
+            -- lua = true
+          },
+          show_prediction_strength = false
+        })
+      end
+    }
   },
   event = {
     "InsertEnter",
@@ -80,43 +105,44 @@ function M.config()
     TypeParameter = "󰊄",
     Codeium = "󰚩",
     Copilot = "",
+    TabNine = "",
   }
+
+  local function has_words_before()
+    local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+  end
 
   cmp.setup {
     snippet = {
       expand = function(args)
-        luasnip.lsp_expand(args.body) -- For `luasnip` users.
+        luasnip.lsp_expand(args.body) -- For `luasnip` users -- .
       end,
     },
-    mapping = cmp.mapping.preset.insert {
-      ["<C-k>"] = cmp.mapping.select_prev_item(),
-      ["<C-j>"] = cmp.mapping.select_next_item(),
-      ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-      ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
-      ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-      ["<C-e>"] = cmp.mapping {
-        i = cmp.mapping.abort(),
-        c = cmp.mapping.close(),
-      },
-      -- Accept currently selected item. If none selected, `select` first item.
-      -- Set `select` to `false` to only confirm explicitly selected items.
-      ["<CR>"] = cmp.mapping.confirm { select = true },
+    mapping = {
+      ["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
+      ["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
+      ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-k>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-j>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+      ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+      ["<C-0>"] = cmp.mapping(cmp.mapping.complete({}), { "i", "c" }), -- functi
+      ["<C-y>"] = cmp.config.disable,
+      ["<C-e>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+      ["<CR>"] = cmp.mapping.confirm { select = false },
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expandable() then
-          luasnip.expand()
         elseif luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
-        elseif check_backspace() then
-          fallback()
+        elseif has_words_before() then
+          cmp.complete()
         else
           fallback()
         end
-      end, {
-        "i",
-        "s",
-      }),
+      end, { "i", "s" }),
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
@@ -125,10 +151,7 @@ function M.config()
         else
           fallback()
         end
-      end, {
-        "i",
-        "s",
-      }),
+      end, { "i", "s" }),
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
@@ -141,16 +164,24 @@ function M.config()
           buffer = "",
           path = "",
           emoji = "",
+          cmp_tabnine = "",
         })[entry.source.name]
         return vim_item
       end,
     },
     sources = {
-      { name = "nvim_lsp" },
-      { name = "nvim_lua" },
-      { name = "luasnip" },
-      { name = "buffer" },
-      { name = "path" },
+      { name = "cmp_tabnine", priority = 900 },
+      { name = "nvim_lsp",    priority = 1000 },
+      { name = "luasnip",     priority = 750 },
+      { name = "buffer",      priority = 500 },
+      { name = "path",        priority = 250 },
+    },
+    duplicates = {
+      nvim_lsp = 1,
+      luasnip = 1,
+      cmp_tabnine = 1,
+      buffer = 1,
+      path = 1,
     },
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,

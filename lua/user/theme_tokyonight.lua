@@ -7,11 +7,10 @@ local M = {
 
 M.name = "tokyonight-moon"
 function M.config()
-
   require("tokyonight").setup({
     transparent = true,
     styles = {
-      sidebars = "transparent"
+      sidebars = "full"
     }
   })
 

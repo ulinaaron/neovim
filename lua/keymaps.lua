@@ -257,10 +257,14 @@ maps.n["<leader>uh"] = { ui.toggle_foldcolumn, desc = "Toggle foldcolumn" }
 
 
 maps.n["<leader>xx"] = { function() require("trouble").open() end, desc = "Open Trouble" }
-maps.n["<leader>xw"] = { function() require("trouble").open("workspace_diagnostics") end,
-  desc = "Open Trouble (Workspace Diagnostics)" }
-maps.n["<leader>xd"] = { function() require("trouble").open("document_diagnostics") end,
-  desc = "Open Trouble (Document Diagnostics)" }
+maps.n["<leader>xw"] = {
+  function() require("trouble").open("workspace_diagnostics") end,
+  desc = "Open Trouble (Workspace Diagnostics)"
+}
+maps.n["<leader>xd"] = {
+  function() require("trouble").open("document_diagnostics") end,
+  desc = "Open Trouble (Document Diagnostics)"
+}
 maps.n["<leader>xq"] = { function() require("trouble").open("quickfix") end, desc = "Open Trouble (Quickfix)" }
 maps.n["<leader>xl"] = { function() require("trouble").open("loclist") end, desc = "Open Trouble (Location List)" }
 maps.n["gR"] = { function() require("trouble").open("lsp_references") end, desc = "Open Trouble (LSP References)" }
